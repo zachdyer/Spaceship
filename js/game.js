@@ -2,7 +2,7 @@ var game = {
 	loaded: 0,
 	images: [],
 	audio: [],
-	scale: 1,
+	scale: 0.75,
 	score: 0,
 	startTime: Date.now(),
 	import: function(imports) {
@@ -72,8 +72,9 @@ var game = {
 		this.import(this.config.assets);
 	},
 	ready: function() {
-		console.log("game ready");
+		//this.audio[0].play();
 		this.loadGif.style.display = "none";
+		game.star.init();
 		this.loop();
 	},
 	update: function() {
@@ -82,6 +83,7 @@ var game = {
 		game.spaceship.update();
 		game.ufo.update();
 		game.upgrades.update();
+		game.explosion.update();
 
 	},
 	draw: function() {
@@ -90,6 +92,7 @@ var game = {
 		game.spaceship.draw();
 		game.ufo.draw();
 		game.upgrades.draw();
+		game.explosion.draw();
 	},
 	loop: function() {
 		if(game.state.pause == false){

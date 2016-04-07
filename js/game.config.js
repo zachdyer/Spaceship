@@ -9,6 +9,7 @@ game.config = {
     "sounds/spaceshipExplosion.mp3",
     "sounds/upgrade.mp3",
     "img/SpaceShip.gif",
-    "img/6B.png"
+    "img/6B.png",
+    "img/alien4.png"
   ]
 }

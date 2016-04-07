@@ -4,37 +4,34 @@ game.ufo = {
   slowestSpawnRate: 5 * 1000,
   spawnRate: 5 * 1000,
   particle: function(){
-  	var height = 20;
-  	var width = 40;
+    var width = 114;
+  	var height = 200;
   	var x = Math.random() * screen.width - width;
   	if(x < 0){
   		x = 0;
   	}
   	var speedX = Math.random() * 200 + 100;
   	var chance = Math.random();
-  	if(chance < 0.5){
-  		speedX = -speedX;
-  	}
   	var speedY = Math.random() * 200 + 100;
   	this.x = x;
   	this.y = 0 - height;
   	this.speedX = speedX;
   	this.speedY = speedY;
-  	this.width = width;
-  	this.height = height;
+  	this.width = width * game.scale;
+  	this.height = height * game.scale;
   	this.enteredScreen = false;
   },
   add: function() {
-  	this.all.unshift(new this.particle());
+  	this.particles.unshift(new this.particle());
   },
-  all: [],
+  particles: [],
   update: function(){
   	//Check for laser hit
   	this.checkDamage();
 
   	//Update Position
-  	for(var i = 0; i < this.all.length; i++){
-  		var ufoship = this.all[i];
+  	for(var i = 0; i < this.particles.length; i++){
+  		var ufoship = this.particles[i];
 
   		//Prepare UFO to top screen detection
   		if(ufoship.y > 0 && ufoship.enteredScreen === false){
@@ -56,8 +53,20 @@ game.ufo = {
   		}
 
   		//Move UFO to new position
-  		var distanceX = game.time.distancePerSec(ufoship.speedX);
-  		var distanceY = game.time.distancePerSec(ufoship.speedY);
+
+      if(game.spaceship.x > ufoship.x) {
+        var distanceX = game.time.distancePerSec(ufoship.speedX);
+      } else {
+        var distanceX = game.time.distancePerSec(-ufoship.speedX);
+      }
+
+      if(game.spaceship.y > ufoship.y) {
+        var distanceY = game.time.distancePerSec(ufoship.speedY);
+      } else {
+        var distanceY = game.time.distancePerSec(-ufoship.speedY);
+      }
+  		//var distanceX = game.time.distancePerSec(ufoship.speedX);
+  		//var distanceY = game.time.distancePerSec(ufoship.speedY);
   		ufoship.x += distanceX;
   		ufoship.y += distanceY;
   	}
@@ -70,10 +79,11 @@ game.ufo = {
   	}
   },
   checkDamage: function() {
+
   	for(var i = 0; i < game.spaceship.lasers.length; i++){
   		var laser = game.spaceship.lasers[i];
-  		for(var j = 0; j < this.all.length; j++){
-  			var ufoship = this.all[j];
+  		for(var j = 0; j < this.particles.length; j++){
+  			var ufoship = this.particles[j];
   			var distance = laser.speed * game.time.frameDuration / 1000;
   			for(var k = 0; k < distance; k++){
   				if(
@@ -82,16 +92,18 @@ game.ufo = {
   					laser.y - k < ufoship.y + ufoship.height &&
   					laser.y - k > ufoship.y
   				){
-  					//Destroy UFO
+
+            //Destroy UFO
   					game.explosion.add(ufoship.x,ufoship.y);
-  					this.all.splice(j, 1);
+  					this.particles.splice(j, 1);
 
   					//Sound Effect
   					var random = Math.floor(Math.random() * 2) + 2;
   					var explosionSound = game.audio[random];
   					explosionSound.load();
-  					if(game.sound.muted === false)
-  						explosionSound.play();
+  					if(game.state.muted === false) {
+              explosionSound.play();
+            }
 
   					//Destroy Laser
   					game.spaceship.lasers.splice(i,1);
@@ -106,23 +118,17 @@ game.ufo = {
 
   					//No use in continuing with the loop
   					break;
+
   				}
   			}
   		}
   	}
   },
   draw: function() {
-  	for(var i = 0; i < this.all.length; i++){
-  		var ufoship = this.all[i];
+  	for(var i = 0; i < this.particles.length; i++){
+  		var ufoship = this.particles[i];
   		var ctx = game.ctx;
-  		ctx.beginPath();
-  		ctx.moveTo(ufoship.x + ufoship.width / 2, ufoship.y);
-  		ctx.lineTo(ufoship.x, ufoship.y + ufoship.height / 2);
-  		ctx.lineTo(ufoship.x + ufoship.width / 2, ufoship.y + ufoship.height);
-  		ctx.lineTo(ufoship.x + ufoship.width, ufoship.y + ufoship.height / 2);
-  		ctx.closePath();
-  		ctx.fillStyle = "white";
-  		ctx.fill();
+      ctx.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height);
   	}
   }
 }

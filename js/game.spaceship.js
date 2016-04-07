@@ -4,10 +4,12 @@ game.spaceship = {
   width: 170 * game.scale,
   height: 102 * game.scale,
   draw: function() {
-    var ctx = game.ctx;
-  	//New Ship
-  	var playerShip = game.images[1];
-  	ctx.drawImage(playerShip, this.x, this.y, this.width, this.height);
+    if(game.state.playing) {
+      var ctx = game.ctx;
+    	var playerShip = game.images[1];
+    	ctx.drawImage(playerShip, this.x, this.y, this.width, this.height);
+    }
+    this.drawLasers();
   },
   move: function(event) {
     if(
@@ -31,7 +33,7 @@ game.spaceship = {
   },
   laserSize: 5,
   lasers: [],
-  drawLaser: function(x,y){
+  drawLaser: function(x,y) {
   	var ctx = game.ctx;
   	ctx.beginPath();
   	ctx.arc(x,y,this.laserSize,0,2 * Math.PI, false);
@@ -48,26 +50,22 @@ game.spaceship = {
   	}
   },
   fire: function(){
-    console.log("fire");
   	if(game.state.playing){
   		var laser = new this.laser(this.x + this.width / 2,this.y);
   		this.lasers.unshift(laser);
-  		game.audio[0].play();
+      game.audio[1].load();
+      game.audio[1].play();
   	}
   },
   updateLasers: function(){
   	var time = new Date().getTime();
   	if(
-  		time - this.lastLaserFire > this.laserCoolDown && game.controls.key.spacebar ||
-  		time - this.lastLaserFire > this.laserCoolDown && game.controls.key.leftClick
+  		time - this.lastFire > this.laserCoolDown && game.controls.key.spacebar ||
+  		time - this.lastFire > this.laserCoolDown && game.controls.key.leftClick
   	){
   		this.fire();
-  		this.lastLaserFire = time;
+  		this.lastFire = time;
   	}
-    if(game.controls.key.leftClick){
-      this.fire();
-  		this.lastLaserFire = time;
-    }
 
   	for(var i = 0; i < this.lasers.length; i++){
   		var laser = this.lasers[i];
@@ -78,15 +76,13 @@ game.spaceship = {
   		}
   	}
   },
-  updatePosition: function(){
-  },
   update: function() {
-    this.updatePosition();
     this.updateLasers();
+    if(game.state.playing) this.checkDamage();
   },
   checkDamage: function(){
-  	for(var i = 0; i < ufo.ufos.length; i++){
-  		var ufoship = ufo.ufos[i];
+  	for(var i = 0; i < game.ufo.particles.length; i++){
+  		var ufoship = game.ufo.particles[i];
   		if(
   			//UFO Center Point Collision
   			ufoship.x + ufoship.width / 2 > this.x &&
@@ -94,15 +90,15 @@ game.spaceship = {
   			ufoship.y + ufoship.height / 2 > this.y &&
   			ufoship.y + ufoship.height / 2 < this.y + this.height
   		){
-  			game.play = false;
-  			game.over = true;
+  			game.state.playing = false;
+  			game.state.over = true;
 
   			//Explosion Sound effect
-  			var explosion = sound.all[4];
-  			if(sound.muted === false){
+  			var explosion = game.audio[4];
+  			if(game.state.muted === false){
   				explosion.play();
   			}
-  			ufo.explosion.add(this.x,this.y);
+  			game.explosion.add(this.x + this.width / 2,this.y + this.height / 2);
   		}
 
   	}

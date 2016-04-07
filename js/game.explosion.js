@@ -31,13 +31,13 @@ game.explosion = {
   add: function(x,y) {
   	var particleCount = 50;
   	for(var i = 0; i < particleCount; i++){
-  		game.ufo.all.unshift(new game.ufo.particle(x,y));
+  		this.particles.unshift(new this.particle(x,y));
   	}
   },
   draw: function() {
-  	for(var i = 0; i < game.ufo.all.length; i++){
+  	for(var i = 0; i < this.particles.length; i++){
   		var ctx = game.ctx;
-  		var particle = game.ufo.all[i];
+  		var particle = this.particles[i];
   		ctx.beginPath();
   		ctx.arc(particle.x,particle.y,particle.size, 0, 2 * Math.PI, false);
   		ctx.fillStyle = particle.color;
@@ -45,8 +45,8 @@ game.explosion = {
   	}
   },
   update: function() {
-  	for(var i = 0; i < game.ufo.all.length; i++){
-  		var particle = game.ufo.all[i];
+  	for(var i = 0; i < this.particles.length; i++){
+  		var particle = this.particles[i];
 
   		//Move particle
   		var distanceX = game.time.distancePerSec(particle.speedX);
@@ -56,13 +56,13 @@ game.explosion = {
 
   		//Check if particle left the bounds
   		if(particle.y < 0 - particle.size * 2){
-  			game.ufo.all.splice(i,1);
+  			this.particles.splice(i,1);
   		} else if(particle.x > screen.width + particle.size * 2){
-  			game.ufo.all.splice(i,1);
+  			this.particles.splice(i,1);
   		} else if(particle.y > screen.height + particle.size * 2){
-  			game.ufo.all.splice(i,1);
+  			this.particles.splice(i,1);
   		} else if(particle.x < 0 - particle.size * 2){
-  			game.ufo.all.splice(i,1);
+  			this.particles.splice(i,1);
   		}
   	}
   }

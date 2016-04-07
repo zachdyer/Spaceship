@@ -1,4 +1,6 @@
 game.state = {
   pause: false,
-  playing: true
+  playing: true,
+  muted: false,
+  over: false
 }
