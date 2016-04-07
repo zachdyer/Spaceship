@@ -98,7 +98,7 @@ game.controls = {
   },
   mouseDown: function(){
   	game.controls.key.leftClick = true;
-  	game.paused = false;
+  	game.state.pause = false;
   },
   mouseUp: function() {
   	game.controls.key.leftClick = false;

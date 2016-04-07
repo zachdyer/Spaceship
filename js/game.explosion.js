@@ -34,7 +34,7 @@ game.explosion = {
   		game.ufo.all.unshift(new game.ufo.particle(x,y));
   	}
   },
-  draw = function() {
+  draw: function() {
   	for(var i = 0; i < game.ufo.all.length; i++){
   		var ctx = game.ctx;
   		var particle = game.ufo.all[i];

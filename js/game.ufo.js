@@ -74,7 +74,7 @@ game.ufo = {
   		var laser = game.spaceship.lasers[i];
   		for(var j = 0; j < this.all.length; j++){
   			var ufoship = this.all[j];
-  			var distance = laser.speed * frame.time() / 1000;
+  			var distance = laser.speed * game.time.frameDuration / 1000;
   			for(var k = 0; k < distance; k++){
   				if(
   					laser.x < ufoship.x + ufoship.width &&
@@ -88,7 +88,7 @@ game.ufo = {
 
   					//Sound Effect
   					var random = Math.floor(Math.random() * 2) + 2;
-  					var explosionSound = game.sound.all[random];
+  					var explosionSound = game.audio[random];
   					explosionSound.load();
   					if(game.sound.muted === false)
   						explosionSound.play();

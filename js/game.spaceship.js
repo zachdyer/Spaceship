@@ -48,7 +48,8 @@ game.spaceship = {
   	}
   },
   fire: function(){
-  	if(game.play){
+    console.log("fire");
+  	if(game.state.playing){
   		var laser = new this.laser(this.x + this.width / 2,this.y);
   		this.lasers.unshift(laser);
   		game.audio[0].play();
@@ -57,16 +58,20 @@ game.spaceship = {
   updateLasers: function(){
   	var time = new Date().getTime();
   	if(
-  		time - this.lastLaserFire > this.laserCoolDown && key.spacebar ||
-  		time - this.lastLaserFire > this.laserCoolDown && key.leftClick
+  		time - this.lastLaserFire > this.laserCoolDown && game.controls.key.spacebar ||
+  		time - this.lastLaserFire > this.laserCoolDown && game.controls.key.leftClick
   	){
   		this.fire();
   		this.lastLaserFire = time;
   	}
+    if(game.controls.key.leftClick){
+      this.fire();
+  		this.lastLaserFire = time;
+    }
 
   	for(var i = 0; i < this.lasers.length; i++){
   		var laser = this.lasers[i];
-  		var distance = laser.speed * frame.time() / 1000
+  		var distance = laser.speed * game.time.frameDuration / 1000
   		laser.y -= distance;
   		if(laser.y < 0){
   			this.lasers.pop();

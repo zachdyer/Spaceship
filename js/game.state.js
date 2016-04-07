@@ -1,4 +1,4 @@
 game.state = {
   pause: false,
-  fighting: false
+  playing: true
 }

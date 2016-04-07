@@ -2,7 +2,6 @@ var game = {
 	loaded: 0,
 	images: [],
 	audio: [],
-	paused: false,
 	scale: 1,
 	score: 0,
 	startTime: Date.now(),
@@ -93,7 +92,7 @@ var game = {
 		game.upgrades.draw();
 	},
 	loop: function() {
-		if(game.paused == false){
+		if(game.state.pause == false){
 			game.update();
 			game.draw();
 		}
