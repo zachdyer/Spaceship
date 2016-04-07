@@ -72,7 +72,7 @@ screen.drawTitle = function(){
 	ctx.fillStyle = "white";
 	ctx.textAlign = "center";
 	ctx.font = "14pt Arial";
-	
+
 	var titleImage = images.all[0];
 	ctx.drawImage(titleImage, screen.width / 2 - titleImage.width / 2, screen.height / 2 - titleImage.height / 2);
 	var timer = new Date().getTime() - timerStart;
@@ -95,7 +95,7 @@ star.new = function(){
 	this.color = colors[randNum];
 }
 star.all = new Array();
-star.draw = function(){ 
+star.draw = function(){
 	var ctx = screen.context;
 	for(var i = 0; i < star.all.length; i++){
 		var currentStar = star.all[i];
@@ -109,7 +109,7 @@ star.update = function(){
 	for(var i = 0; i < star.all.length; i++){
 		var currentStar = star.all[i];
 		var distance = currentStar.speed * frame.time() / 1000;
-		currentStar.y += distance; 
+		currentStar.y += distance;
 		if(currentStar.y > screen.height + currentStar.radius * 2){
 			currentStar.x = Math.random() * screen.width;
 			currentStar.y = 0 - currentStar.radius * 2;
@@ -131,39 +131,20 @@ spaceship.width = 170 * scale;
 spaceship.height = 102 * scale;
 spaceship.draw = function(){
 	var ctx = screen.context;
-	
-	/* old ship
-	ctx.beginPath();
-	var tipX = spaceship.x + spaceship.width / 2;
-	var tipY = spaceship.y;
-	ctx.moveTo(tipX, tipY);
-	ctx.lineTo(tipX - spaceship.width / 2, tipY + spaceship.height);
-	ctx.lineTo(tipX + spaceship.width / 2, tipY + spaceship.height);
-	ctx.closePath();
-	var time = new Date().getTime();
-	var coolDownLevel = time - spaceship.lastLaserFire;
-	if(coolDownLevel > spaceship.laserCoolDown || coolDownLevel === 0){
-		coolDownLevel = spaceship.laserCoolDown;
-	}
-	var modifier = coolDownLevel / spaceship.laserCoolDown;
-	var color = Math.round(255 * modifier);
-	ctx.fillStyle = "rgb(255," + color + "," + color + ")";
-	ctx.fill();
-	*/
-	
+
 	//New Ship
 	var playerShip = images.all[1];
 	ctx.drawImage(playerShip,spaceship.x,spaceship.y,spaceship.width,spaceship.height);
-	
-	
+
+
 };
 spaceship.move = function(event){
 	if(
-		game.paused === false && 
+		game.paused === false &&
 		event.clientX > 0 &&
 		event.clientX < screen.width - spaceship.width &&
 		event.clientY > 0 &&
-		event.clientY < screen.height - spaceship.height 
+		event.clientY < screen.height - spaceship.height
 	){
 		spaceship.x = event.clientX;
 		spaceship.y = event.clientY;
@@ -207,12 +188,12 @@ spaceship.updateLasers = function(){
 	var time = new Date().getTime();
 	if(
 		time - spaceship.lastLaserFire > spaceship.laserCoolDown && key.spacebar ||
-		time - spaceship.lastLaserFire > spaceship.laserCoolDown && key.leftClick 
+		time - spaceship.lastLaserFire > spaceship.laserCoolDown && key.leftClick
 	){
 		spaceship.fire();
 		spaceship.lastLaserFire = time;
 	}
-	
+
 	for(var i = 0; i < spaceship.lasers.length; i++){
 		var laser = spaceship.lasers[i];
 		var distance = laser.speed * frame.time() / 1000
@@ -224,13 +205,13 @@ spaceship.updateLasers = function(){
 };
 spaceship.updatePosition = function(){
 	var distance = spaceship.speed * frame.time() / 1000;
-	if(key.left && spaceship.x > 0){ 
+	if(key.left && spaceship.x > 0){
 		spaceship.x -= distance;
 	}
 	if(key.right && spaceship.x < screen.width - spaceship.width){
 		spaceship.x += distance;
 	}
-	if(key.up && spaceship.y > 0){ 
+	if(key.up && spaceship.y > 0){
 		spaceship.y -= distance;
 	}
 	if(key.down && spaceship.y < screen.height - spaceship.height){
@@ -245,11 +226,11 @@ spaceship.checkDamage = function(){
 			ufoship.x + ufoship.width / 2 > spaceship.x &&
 			ufoship.x + ufoship.width / 2 < spaceship.x + spaceship.width &&
 			ufoship.y + ufoship.height / 2 > spaceship.y &&
-			ufoship.y + ufoship.height / 2 < spaceship.y + spaceship.height 
+			ufoship.y + ufoship.height / 2 < spaceship.y + spaceship.height
 		){
 			game.play = false;
 			game.over = true;
-			
+
 			//Explosion Sound effect
 			var explosion = sound.all[4];
 			if(sound.muted === false){
@@ -257,7 +238,7 @@ spaceship.checkDamage = function(){
 			}
 			ufo.explosion.add(spaceship.x,spaceship.y);
 		}
-		
+
 	}
 };
 
@@ -287,7 +268,7 @@ upgrades.update = function(){
 		//Move upgrade
 		var distance = distancePerSec(upgrade.speed);
 		upgrade.y += distance;
-		
+
 		//Check center point collision
 		if(
 			upgrade.x + upgrade.radius > spaceship.x &&
@@ -297,7 +278,7 @@ upgrades.update = function(){
 		){
 			//Delete from array
 			upgrades.all.splice(i,1);
-			
+
 			//Add upgrade
 			switch(upgrade.type){
 				case "cooldown":
@@ -308,7 +289,7 @@ upgrades.update = function(){
 					break;
 			}
 		}
-		
+
 		//Delete from array if off the screen
 		if(upgrade.y > screen.height + upgrade.radius * 2){
 			upgrades.all.splice(i,1);
@@ -361,7 +342,7 @@ ufo.ship = function(){
 	this.width = width;
 	this.height = height;
 	this.enteredScreen = false;
-}; 
+};
 ufo.add = function(){
 	ufo.ufos.unshift(new ufo.ship());
 };
@@ -369,16 +350,16 @@ ufo.ufos = [];
 ufo.update = function(){
 	//Check for laser hit
 	ufo.checkDamage();
-	
+
 	//Update Position
 	for(var i = 0; i < ufo.ufos.length; i++){
 		var ufoship = ufo.ufos[i];
-		
+
 		//Prepare UFO to top screen detection
 		if(ufoship.y > 0 && ufoship.enteredScreen === false){
 			ufoship.enteredScreen = true;
-		} 
-		
+		}
+
 		//UFO Bounds Detection
 		if(ufoship.x > screen.width - ufoship.width){
 			ufoship.speedX = -ufoship.speedX;
@@ -392,14 +373,14 @@ ufo.update = function(){
 		if(ufoship.y < 0 && ufoship.enteredScreen){
 			ufoship.speedY = -ufoship.speedY;
 		}
-		
+
 		//Move UFO to new position
 		var distanceX = distancePerSec(ufoship.speedX);
 		var distanceY = distancePerSec(ufoship.speedY);
 		ufoship.x += distanceX;
 		ufoship.y += distanceY;
 	}
-	
+
 	//Add UFO at spawn interval
 	var time = new Date().getTime();
 	if(time - ufo.lastSpawnTime > ufo.spawnRate){
@@ -423,25 +404,25 @@ ufo.checkDamage = function(){
 					//Destroy UFO
 					ufo.explosion.add(ufoship.x,ufoship.y);
 					ufo.ufos.splice(j, 1);
-					
+
 					//Sound Effect
 					var random = Math.floor(Math.random() * 2) + 2;
 					var explosionSound = sound.all[random];
 					explosionSound.load();
 					if(sound.muted === false)
 						explosionSound.play();
-					
+
 					//Destroy Laser
 					spaceship.lasers.splice(i,1);
-					
+
 					//Increment Score
 					game.score++;
-					
+
 					//Decrement UFO Spawn Rate
 					if(ufo.spawnRate > ufo.fastestSpawnRate){
 						ufo.spawnRate -= 1000;
 					}
-					
+
 					//No use in continuing with the loop
 					break;
 				}
@@ -451,7 +432,7 @@ ufo.checkDamage = function(){
 };
 ufo.draw = function(){
 	for(var i = 0; i < ufo.ufos.length; i++){
-		var ufoship = ufo.ufos[i]; 
+		var ufoship = ufo.ufos[i];
 		var ctx = screen.context;
 		ctx.beginPath();
 		ctx.moveTo(ufoship.x + ufoship.width / 2, ufoship.y);
@@ -472,8 +453,8 @@ ufo.explosion.particle = function(x,y){
 	var xNegPos = Math.floor(Math.random() * 2 + 1);
 	if(xNegPos === 1){
 		speedX = -speedX;
-	} 
-	var yNegPos = Math.floor(Math.random() * 2 + 1); 
+	}
+	var yNegPos = Math.floor(Math.random() * 2 + 1);
 	if(yNegPos === 1){
 		speedY = -speedY;
 	}
@@ -512,13 +493,13 @@ ufo.explosion.draw = function(){
 ufo.explosion.update = function(){
 	for(var i = 0; i < ufo.explosion.particles.length; i++){
 		var particle = ufo.explosion.particles[i];
-		
+
 		//Move particle
 		var distanceX = distancePerSec(particle.speedX);
 		var distanceY = distancePerSec(particle.speedY);
 		particle.x += distanceX;
 		particle.y += distanceY;
-		
+
 		//Check if particle left the bounds
 		if(particle.y < 0 - particle.size * 2){
 			ufo.explosion.particles.splice(i,1);
@@ -529,7 +510,7 @@ ufo.explosion.update = function(){
 		} else if(particle.x < 0 - particle.size * 2){
 			ufo.explosion.particles.splice(i,1);
 		}
-		
+
 	}
 };
 
@@ -541,8 +522,8 @@ images.add = function(src){
 	return image;
 };
 images.all = [
-	new images.add("images/SpaceShip.gif"),
-	new images.add("images/6B.png")
+	new images.add("img/SpaceShip.gif"),
+	new images.add("img/6B.png")
 ];
 images.loaded = false;
 images.load = function(){
@@ -590,11 +571,6 @@ sound.load = function(){
 		},false);
 	}
 };
-if($.cookie("muted") == "true"){
-	sound.muted = true;
-} else {
-	sound.muted = false;
-}
 sound.muteSounds = function(){
 	sound.all[0].pause();
 	for(var i = 0; i < sound.all.length; i++){
@@ -676,7 +652,7 @@ game.updateFPS = function(){
 		game.currentFPS = 0;
 		game.lastFPSTime = currentTime;
 	}
-	
+
 };
 game.checkHighScore = function(){
 	if(game.score > game.highScore){
@@ -734,11 +710,9 @@ game.keydown = function(event) {
 		case 77: //M - Mute
 			if(sound.muted === false){
 				sound.muted = true;
-				$.cookie("muted","true");
 				sound.muteSounds();
 			} else {
 				sound.muted = false;
-				$.cookie("muted","false");
 				sound.play(0);
 			}
 			break;
