@@ -91,7 +91,7 @@ game.spaceship = {
   			ufoship.y + ufoship.height / 2 < this.y + this.height
   		){
   			game.state.playing = false;
-  			game.state.over = true;
+  			game.state.gameover = true;
 
   			//Explosion Sound effect
   			var explosion = game.audio[4];

@@ -36,10 +36,12 @@ game.upgrades = {
   			this.all.splice(i,1);
 
   			//Add upgrade
-  			switch(upgrade.type){
+  			switch(upgrade.type) {
   				case "cooldown":
+            console.log("upgrade");
   					game.audio[5].currentTime = 0.5;
-  					if(game.sound.muted === false)
+            game.audio[5].volume = 0.25;
+  					if(game.state.muted === false)
   						game.audio[5].play();
   					game.spaceship.laserCoolDown -= 50;
   					break;

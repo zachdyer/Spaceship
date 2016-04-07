@@ -10,16 +10,12 @@ game.ufo = {
   	if(x < 0){
   		x = 0;
   	}
-  	var speedX = Math.random() * 200 + 100;
-  	var chance = Math.random();
-  	var speedY = Math.random() * 200 + 100;
   	this.x = x;
   	this.y = 0 - height;
-  	this.speedX = speedX;
-  	this.speedY = speedY;
   	this.width = width * game.scale;
   	this.height = height * game.scale;
-  	this.enteredScreen = false;
+    this.speed = 200;
+    this.rotation = 0;
   },
   add: function() {
   	this.particles.unshift(new this.particle());
@@ -28,48 +24,7 @@ game.ufo = {
   update: function(){
   	//Check for laser hit
   	this.checkDamage();
-
-  	//Update Position
-  	for(var i = 0; i < this.particles.length; i++){
-  		var ufoship = this.particles[i];
-
-  		//Prepare UFO to top screen detection
-  		if(ufoship.y > 0 && ufoship.enteredScreen === false){
-  			ufoship.enteredScreen = true;
-  		}
-
-  		//UFO Bounds Detection
-  		if(ufoship.x > screen.width - ufoship.width){
-  			ufoship.speedX = -ufoship.speedX;
-  		}
-  		if(ufoship.y > screen.height - ufoship.height){
-  			ufoship.speedY = -ufoship.speedY;
-  		}
-  		if(ufoship.x < 0){
-  			ufoship.speedX = -ufoship.speedX;
-  		}
-  		if(ufoship.y < 0 && ufoship.enteredScreen){
-  			ufoship.speedY = -ufoship.speedY;
-  		}
-
-  		//Move UFO to new position
-
-      if(game.spaceship.x > ufoship.x) {
-        var distanceX = game.time.distancePerSec(ufoship.speedX);
-      } else {
-        var distanceX = game.time.distancePerSec(-ufoship.speedX);
-      }
-
-      if(game.spaceship.y > ufoship.y) {
-        var distanceY = game.time.distancePerSec(ufoship.speedY);
-      } else {
-        var distanceY = game.time.distancePerSec(-ufoship.speedY);
-      }
-  		//var distanceX = game.time.distancePerSec(ufoship.speedX);
-  		//var distanceY = game.time.distancePerSec(ufoship.speedY);
-  		ufoship.x += distanceX;
-  		ufoship.y += distanceY;
-  	}
+    this.move();
 
   	//Add UFO at spawn interval
   	var time = new Date().getTime();
@@ -77,6 +32,8 @@ game.ufo = {
   		this.add();
   		this.lastSpawnTime = time;
   	}
+
+    this.despawn();
   },
   checkDamage: function() {
 
@@ -130,5 +87,45 @@ game.ufo = {
   		var ctx = game.ctx;
       ctx.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height);
   	}
+  },
+  move: function(ufoship) {
+    for(var i = 0; i < this.particles.length; i++){
+  		var ufoship = this.particles[i];
+      //Move UFO toward ship
+      var speed = game.time.distancePerSec(ufoship.speed);
+
+      if (Math.abs(ufoship.x - game.spaceship.x) > speed &&
+        Math.abs(ufoship.y - game.spaceship.y) > speed &&
+        game.state.gameover === false)
+      {
+        var delta_x = game.spaceship.x - ufoship.x;
+        var delta_y = game.spaceship.y - ufoship.y;
+        var goal_dist = Math.sqrt( (delta_x * delta_x) + (delta_y * delta_y) );
+        var ratio = speed / goal_dist;
+        var x_move = ratio * delta_x;
+        var y_move = ratio * delta_y;
+        ufoship.x += x_move;
+        ufoship.y += y_move;
+      } else {
+        //If game over they keep decending
+        ufoship.x += 0;
+        ufoship.y += speed;
+      }
+
+      //Rotate ship
+      game.ctx.save();
+      game.ctx.translate(ufoship.x, ufoship.y);
+      game.ctx.rotate(20*Math.PI/180);
+      game.ctx.restore();
+
+    }
+  },
+  despawn: function() {
+    for(var i = 0; i < this.particles.length; i++) {
+      var ufo = this.particles[i];
+      if(ufo.y > window.innerHeight + ufo.height) {
+        this.particles.splice(i,1);
+      }
+    }
   }
 }

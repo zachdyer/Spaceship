@@ -23,17 +23,16 @@ game.sound = {
   	}
   },
   muteSounds: function() {
-  	this.all[0].pause();
+  	game.audio[0].pause();
   	for(var i = 0; i < this.all.length; i++){
   		var soundFile = this.all[i];
   		soundFile.pause();
   	}
   },
   play: function(index) {
-  	if(this.muted === false){
+  	if(game.state.muted === false){
   		this.all[index].load();
   		this.all[index].play();
   	}
-  },
-  muted: false
+  }
 };
