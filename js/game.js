@@ -105,7 +105,7 @@ var game = {
 		this.ctx.save();
 		this.ctx.translate(x, y);
 		this.ctx.rotate(rotate * Math.PI / 180);
-		this.ctx.drawImage(img, 0, 0, width, height);
+		this.ctx.drawImage(img, -width / 2, -height / 2, width, height);
 		this.ctx.restore();
 	}
 };

@@ -93,12 +93,14 @@ game.spaceship = {
   			game.state.playing = false;
   			game.state.gameover = true;
 
-  			//Explosion Sound effect
+  			//Explode ship
   			var explosion = game.audio[4];
-  			if(game.state.muted === false){
-  				explosion.play();
-  			}
+  			if(game.state.muted === false) explosion.play();
+
   			game.explosion.add(this.x + this.width / 2,this.y + this.height / 2);
+  			game.explosion.add(ufoship.x + ufoship.width / 2,ufoship.y + ufoship.height / 2);
+        game.ufo.particles.splice(i,1);
+
   		}
 
   	}

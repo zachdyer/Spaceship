@@ -84,7 +84,7 @@ game.ufo = {
   draw: function() {
   	for(var i = 0; i < this.particles.length; i++){
   		var ufoship = this.particles[i];
-      game.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height, ufoship.rotate);
+      game.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height, ufoship.rotation);
   	}
   },
   move: function(ufoship) {
@@ -92,7 +92,7 @@ game.ufo = {
   		var ufoship = this.particles[i];
       //Move UFO toward ship
       var speed = game.time.distancePerSec(ufoship.speed);
-
+      ufoship.rotation = game.spaceship.x;
       if (Math.abs(ufoship.x - game.spaceship.x) > speed &&
         Math.abs(ufoship.y - game.spaceship.y) > speed &&
         game.state.gameover === false)
@@ -105,10 +105,12 @@ game.ufo = {
         var y_move = ratio * delta_y;
         ufoship.x += x_move;
         ufoship.y += y_move;
+
       } else {
         //If game over they keep decending
         ufoship.x += 0;
         ufoship.y += speed;
+        //ufoship.rotation = 0;
       }
 
     }
