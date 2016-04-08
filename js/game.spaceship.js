@@ -7,7 +7,7 @@ game.spaceship = {
     if(game.state.playing) {
       var ctx = game.ctx;
     	var playerShip = game.images[1];
-    	ctx.drawImage(playerShip, this.x, this.y, this.width, this.height);
+    	ctx.drawImage(playerShip, this.x - this.width * 0.5, this.y - this.height * 0.5, this.width, this.height);
     }
     this.drawLasers();
   },
