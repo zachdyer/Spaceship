@@ -84,8 +84,7 @@ game.ufo = {
   draw: function() {
   	for(var i = 0; i < this.particles.length; i++){
   		var ufoship = this.particles[i];
-  		var ctx = game.ctx;
-      ctx.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height);
+      game.drawImage(game.images[2], ufoship.x, ufoship.y, ufoship.width, ufoship.height, ufoship.rotate);
   	}
   },
   move: function(ufoship) {
@@ -111,12 +110,6 @@ game.ufo = {
         ufoship.x += 0;
         ufoship.y += speed;
       }
-
-      //Rotate ship
-      game.ctx.save();
-      game.ctx.translate(ufoship.x, ufoship.y);
-      game.ctx.rotate(20*Math.PI/180);
-      game.ctx.restore();
 
     }
   },

@@ -100,5 +100,12 @@ var game = {
 			game.draw();
 		}
 		requestAnimationFrame(game.loop);
+	},
+	drawImage: function (img, x, y, width, height, rotate) {
+		this.ctx.save();
+		this.ctx.translate(x, y);
+		this.ctx.rotate(rotate * Math.PI / 180);
+		this.ctx.drawImage(img, 0, 0, width, height);
+		this.ctx.restore();
 	}
 };
