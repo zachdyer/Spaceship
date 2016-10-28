@@ -92,7 +92,7 @@ game.ufo = {
   		var ufoship = this.particles[i];
       //Move UFO toward ship
       var speed = game.time.distancePerSec(ufoship.speed);
-      ufoship.rotation = game.spaceship.x;
+
       if (Math.abs(ufoship.x - game.spaceship.x) > speed &&
         Math.abs(ufoship.y - game.spaceship.y) > speed &&
         game.state.gameover === false)
@@ -100,12 +100,13 @@ game.ufo = {
         var delta_x = game.spaceship.x - ufoship.x;
         var delta_y = game.spaceship.y - ufoship.y;
         var goal_dist = Math.sqrt( (delta_x * delta_x) + (delta_y * delta_y) );
+        var ufo_rotation = Math.atan2(game.spaceship.y - ufoship.y, game.spaceship.x - ufoship.x) * 180 / Math.PI - 90;
         var ratio = speed / goal_dist;
         var x_move = ratio * delta_x;
         var y_move = ratio * delta_y;
         ufoship.x += x_move;
         ufoship.y += y_move;
-
+        ufoship.rotation = ufo_rotation;
       } else {
         //If game over they keep decending
         ufoship.x += 0;
